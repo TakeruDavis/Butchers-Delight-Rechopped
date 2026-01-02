@@ -8,6 +8,6 @@ Planned Updates: <br>
   \- 1.2: Retexturing and remodeling of everything <br>
 
 Future Concepts (may be implemented when the base mod is finished): <br>
-  \- Increased realism (while maintaining simplicity) for the create addon
-  \- Blood draining and other byproducts that must be managed (Like what do you do with cow eyeballs?)
+  \- Increased realism (while maintaining simplicity) for the create addon <br>
+  \- Blood draining and other byproducts that must be managed (Like what do you do with cow eyeballs?) <br>
   \- Slightly more realistic animal behaviour like running away (instead of running around) and attacking back randomly
