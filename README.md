@@ -3,6 +3,6 @@
 Butcher's Delight: Rechopped is a spiritual successor to the mod Butcher's Delight. This mod features an entirely new way to manage meats, featuring a fully Create mod compatible butchering system, several new machines and tools, and many mechanics to dive into that make animals more intresting and realistic to manage.
 
 Planned Updates:
-- 1.0: Complete reimplementation of the original mod 1:1
-- 1.1: Create compatibility
-- 1.2: Retexturing and remodeling of everything
+\- 1.0: Complete reimplementation of the original mod 1:1
+\- 1.1: Create compatibility
+\- 1.2: Retexturing and remodeling of everything
