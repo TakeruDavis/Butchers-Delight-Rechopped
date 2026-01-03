@@ -1,5 +1,4 @@
 {
-  "itemGroup.butchers_delight_rechopped": "Example Mod Tab",
-  "block.butchers_delight_rechopped.example_block": "Example Block",
-  "item.butchers_delight_rechopped.example_item": "Example Item"
+  "itemGroup.butchers_delight_rechopped": "Butcher's Delight: Rechopped",
+  "item.butchers_delight_rechopped.cleaver": "Cleaver"
 }
