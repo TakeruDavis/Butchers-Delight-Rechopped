@@ -1,6 +1,7 @@
 package net.takerudavis.butchers_delight_rechopped;
 
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.neoforged.bus.api.IEventBus;
@@ -21,6 +22,12 @@ public class ModItems {
                             )
                     )
     );
+
+    public static final DeferredItem<BlockItem> HOOK = ITEMS.registerSimpleBlockItem(ModBlocks.HOOK_BLOCK);
+
+    public static final DeferredItem<BlockItem> CHICKEN_CARCASS = ITEMS.registerSimpleBlockItem(ModBlocks.CHICKEN_CARCASS);
+
+    public static final DeferredItem<BlockItem> SHEEP_CARCASS = ITEMS.registerSimpleBlockItem(ModBlocks.SHEEP_CARCASS);
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

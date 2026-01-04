@@ -17,11 +17,13 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.takerudavis.butchers_delight_rechopped.client.CarcassBlockEntityRenderer;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -32,8 +34,6 @@ public class ButchersDelightRechopped {
     public static final String MODID = "butchers_delight_rechopped";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under the "butchers_delight_rechopped" namespace
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "butchers_delight_rechopped" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -52,7 +52,7 @@ public class ButchersDelightRechopped {
         modEventBus.addListener(this::commonSetup);
 
         // Register the Deferred Register to the mod event bus so blocks get registered
-        BLOCKS.register(modEventBus);
+        ModBlocks.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ModItems.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
@@ -83,7 +83,11 @@ public class ButchersDelightRechopped {
 
     // Add the mod's items to the mod's main tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == MAIN_TAB.getKey()) event.accept(ModItems.CLEAVER);
+        if (event.getTabKey() == MAIN_TAB.getKey()) {
+            event.accept(ModItems.CLEAVER);
+            event.accept(ModBlocks.HOOK_BLOCK);
+            ModBlocks.CARCASS_BLOCKS.forEach(event::accept);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -101,6 +105,14 @@ public class ButchersDelightRechopped {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        }
+
+        @SubscribeEvent
+        public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(
+                    ModBlocks.CARCASS_BLOCK_ENTITY.get(),
+                    CarcassBlockEntityRenderer::new
+            );
         }
     }
 }

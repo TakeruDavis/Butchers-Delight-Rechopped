@@ -1,4 +1,7 @@
 {
+  "block.butchers_delight_rechopped.hook": "Hook",
+  "block.butchers_delight_rechopped.chicken_carcass": "Chicken Carcass",
+  "block.butchers_delight_rechopped.sheep_carcass": "Sheep Carcass",
   "itemGroup.butchers_delight_rechopped": "Butcher's Delight: Rechopped",
   "item.butchers_delight_rechopped.cleaver": "Cleaver"
 }
