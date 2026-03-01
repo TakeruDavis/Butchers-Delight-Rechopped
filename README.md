@@ -10,7 +10,7 @@ Planned Updates: <br>
     \- 1.3: Make a seperate addon for [Create](https://github.com/Creators-of-Create/Create) compatibility <br>
 
 Future Concepts (may be implemented when the base mod is finished): <br>
-    \- Blood draining (on dirt, grass, or a new drain block)
-    \- Wall plaques (as an alternative to the cow skull but for every animal)
-    \- More to come!
+    \- Blood draining (on dirt, grass, or a new drain block) <br>
+    \- Wall plaques (as an alternative to the cow skull but for every animal) <br>
+    \- More to come! <br>
 
