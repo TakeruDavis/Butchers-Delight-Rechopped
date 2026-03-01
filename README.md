@@ -5,7 +5,7 @@ There is a fabric version of this mod linked [here](https://github.com/Spicylemo
 
 Planned Updates: <br>
     \- 1.0: Complete reimplementation of the original mod 1:1 <br>
-    \- 1.1: Retexturing and remodeling of everything, bugfixing, and adding configs
+    \- 1.1: Retexturing and remodeling of everything, bugfixing, and adding configs<br>
     \- 1.2: Compat with other mods and addition of a small addon api <br>
     \- 1.3: Make a seperate addon for [Create](https://github.com/Creators-of-Create/Create) compatibility <br>
 
