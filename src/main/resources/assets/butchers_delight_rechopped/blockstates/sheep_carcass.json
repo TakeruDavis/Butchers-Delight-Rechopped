@@ -1,0 +1,7 @@
+{
+  "multipart": [
+    {
+      "apply": { "model": "butchers_delight_rechopped:block/carcass/sheep" }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="butchers_delight_rechopped"
+version="${version}"
+displayName="Butcher's Delight: Rechopped"
+authors="PokiToner, TakeruDavis, SpicyLemon, Bartun2010"
+description="""Butcher's Delight: Rechopped adds an optional butchery system into the game."""
+
+[[dependencies.butchers_delight_rechopped]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.butchers_delight_rechopped]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"

@@ -6,7 +6,7 @@ import net.minecraft.world.item.Tier;
 public class CleaverItem extends AxeItem {
 
     public CleaverItem(Tier tier, Properties properties) {
-        super(tier, properties);
+        super(tier, 6.0F, -3.1F, properties);
     }
 
 }

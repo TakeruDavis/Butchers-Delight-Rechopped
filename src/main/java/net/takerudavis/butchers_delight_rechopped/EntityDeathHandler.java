@@ -1,21 +1,19 @@
 package net.takerudavis.butchers_delight_rechopped;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.BlockItemStateProperties;
-import net.minecraft.world.item.component.CustomData;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.RegistryObject;
 import net.takerudavis.butchers_delight_rechopped.block.AbstractCarcassBlock;
 import net.takerudavis.butchers_delight_rechopped.item.CleaverItem;
 
-@EventBusSubscriber(modid = ButchersDelightRechopped.MODID)
+@Mod.EventBusSubscriber(modid = ButchersDelightRechopped.MODID)
 public class EntityDeathHandler {
 
     @SubscribeEvent
@@ -32,7 +30,7 @@ public class EntityDeathHandler {
             return; // Only proceed if killed with a cleaver
         }
 
-        DeferredBlock<? extends AbstractCarcassBlock> carcassBlockDeferred = ModBlocks.getCarcassBlockForEntity(entity.getType());
+        RegistryObject<? extends AbstractCarcassBlock> carcassBlockDeferred = ModBlocks.getCarcassBlockForEntity(entity.getType());
 
         if (carcassBlockDeferred == null) {
             return;
@@ -46,14 +44,15 @@ public class EntityDeathHandler {
         if (carcassData != null) {
             CompoundTag blockEntityTag = new CompoundTag();
             blockEntityTag.put("CarcassData", carcassData);
-            carcassStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(blockEntityTag));
+            BlockItem.setBlockEntityData(
+                    carcassStack,
+                    ModBlocks.CARCASS_BLOCK_ENTITY.get(),
+                    blockEntityTag
+            );
         }
 
-        carcassStack.set(
-                DataComponents.BLOCK_STATE,
-                BlockItemStateProperties.EMPTY
-                        .with(AbstractCarcassBlock.STAGE, abstractCarcassBlock.getInitialStage(entity))
-        );
+        CompoundTag blockStateTag = carcassStack.getOrCreateTagElement("BlockStateTag");
+        blockStateTag.putString(AbstractCarcassBlock.STAGE.getName(), abstractCarcassBlock.getInitialStage(entity).getSerializedName());
 
         //get rid of normal drops and replace with carcass
         event.getDrops().clear();

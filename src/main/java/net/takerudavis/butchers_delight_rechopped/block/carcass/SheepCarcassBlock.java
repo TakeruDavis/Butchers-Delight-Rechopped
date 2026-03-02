@@ -3,7 +3,7 @@ package net.takerudavis.butchers_delight_rechopped.block.carcass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
@@ -60,8 +60,8 @@ public class SheepCarcassBlock extends AbstractHookableCarcassBlock implements I
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
-                                              BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
 
         if (stack.getItem() instanceof DyeItem dyeItem && state.getValue(STAGE) == ProcessingStage.INTACT) {
             if (level.getBlockEntity(pos) instanceof CarcassBlockEntity be) {
@@ -72,10 +72,10 @@ public class SheepCarcassBlock extends AbstractHookableCarcassBlock implements I
                 level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
 
                 stack.shrink(1);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
 }

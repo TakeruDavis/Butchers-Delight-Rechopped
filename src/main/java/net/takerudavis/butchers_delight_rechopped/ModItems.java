@@ -4,30 +4,26 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import net.takerudavis.butchers_delight_rechopped.item.CleaverItem;
 
 public class ModItems {
 
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ButchersDelightRechopped.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ButchersDelightRechopped.MODID);
 
-    public static final DeferredItem<CleaverItem> CLEAVER = ITEMS.register(
+    public static final RegistryObject<CleaverItem> CLEAVER = ITEMS.register(
                     "cleaver",
-                    () -> new CleaverItem(
-                            Tiers.IRON,
-                            new Item.Properties().attributes(
-                                    AxeItem.createAttributes(Tiers.IRON, 6.0F, -3.1F)
-                            )
-                    )
+                    () -> new CleaverItem(Tiers.IRON, new Item.Properties())
     );
 
-    public static final DeferredItem<BlockItem> HOOK = ITEMS.registerSimpleBlockItem(ModBlocks.HOOK_BLOCK);
+    public static final RegistryObject<BlockItem> HOOK = ITEMS.register("hook", () -> new BlockItem(ModBlocks.HOOK_BLOCK.get(), new Item.Properties()));
 
-    public static final DeferredItem<BlockItem> CHICKEN_CARCASS = ITEMS.registerSimpleBlockItem(ModBlocks.CHICKEN_CARCASS);
+    public static final RegistryObject<BlockItem> CHICKEN_CARCASS = ITEMS.register("chicken_carcass", () -> new BlockItem(ModBlocks.CHICKEN_CARCASS.get(), new Item.Properties()));
 
-    public static final DeferredItem<BlockItem> SHEEP_CARCASS = ITEMS.registerSimpleBlockItem(ModBlocks.SHEEP_CARCASS);
+    public static final RegistryObject<BlockItem> SHEEP_CARCASS = ITEMS.register("sheep_carcass", () -> new BlockItem(ModBlocks.SHEEP_CARCASS.get(), new Item.Properties()));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

@@ -12,7 +12,7 @@ public class CarcassBlockEntityRenderer implements BlockEntityRenderer<CarcassBl
     }
 
     @Override
-    public void render(CarcassBlockEntity carcassBlockEntity, float v, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1) {
+    public void render(CarcassBlockEntity carcassBlockEntity, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
 
     }
 
