@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "butchers_delight_rechopped",
+  "version": "${version}",
+  "name": "Butcher's Delight: Rechopped",
+  "description": "Butcher's Delight: Rechopped adds an optional butchery system into the game.",
+  "authors": [
+    "PokiToner",
+    "TakeruDavis",
+    "SpicyLemon",
+    "Bartun2010"
+  ],
+  "contact": {
+    "homepage": ""
+  },
+  "license": "MIT",
+  "icon": "assets/butchers_delight_rechopped/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.takerudavis.butchers_delight_rechopped.fabric.ButchersDelightRechoppedFabric"
+    ],
+    "client": [
+      "net.takerudavis.butchers_delight_rechopped.fabric.client.ButchersDelightRechoppedFabricClient"
+    ]
+  },
+  "mixins": [
+    "butchers_delight_rechopped.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}

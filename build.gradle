@@ -1,108 +1,55 @@
 plugins {
-    id 'java-library'
-    id 'maven-publish'
-    id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
-version = mod_version
-group = mod_group_id
-
-base {
-    archivesName = mod_id
+architectury {
+    minecraft = project.minecraft_version
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+allprojects {
+    group = rootProject.maven_group
+    version = rootProject.mod_version
+}
 
-minecraft {
-    mappings channel: 'parchment', version: "${parchment_mappings_version}-${parchment_minecraft_version}"
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
 
-    copyIdeResources = true
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
+    base {
+        archivesName = "$rootProject.archives_name-$project.name"
     }
-}
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    mavenLocal()
-}
-
-dependencies {
-    minecraft "net.minecraftforge:forge:${forge_version}"
-}
-
-processResources {
-    inputs.property 'version', mod_version
-    filesMatching('META-INF/mods.toml') {
-        expand 'version': mod_version, 'mod_id': mod_id, 'mod_name': mod_name, 'mod_description': mod_description, 'mod_authors': mod_authors, 'mod_license': mod_license
-    }
-}
-
-jar {
-    manifest {
-        attributes([
-            'Specification-Title': mod_id,
-            'Specification-Vendor': mod_authors,
-            'Specification-Version': '1',
-            'Implementation-Title': project.name,
-            'Implementation-Version': mod_version,
-            'Implementation-Vendor': mod_authors,
-            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
     repositories {
-        maven {
-            url "file://${project.projectDir}/repo"
+    }
+
+    dependencies {
+        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+        mappings loom.officialMojangMappings()
+    }
+
+    java {
+        withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 17
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = base.archivesName.get()
+                from components.java
+            }
+        }
+
+        repositories {
         }
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
 }
