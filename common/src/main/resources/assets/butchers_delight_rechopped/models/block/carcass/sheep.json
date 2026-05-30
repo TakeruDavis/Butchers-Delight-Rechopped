@@ -1,5 +1,9 @@
 {
   "credit": "Made with Blockbench",
+  "textures": {
+    "0": "butchers_delight_rechopped:block/carcass/sheep/base",
+    "particle": "butchers_delight_rechopped:block/carcass/sheep/base"
+  },
   "texture_size": [
     64,
     32

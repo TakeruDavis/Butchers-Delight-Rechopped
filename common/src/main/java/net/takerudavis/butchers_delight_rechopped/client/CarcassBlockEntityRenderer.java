@@ -1,19 +1,35 @@
 package net.takerudavis.butchers_delight_rechopped.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.takerudavis.butchers_delight_rechopped.block.AbstractCarcassBlock;
+import net.takerudavis.butchers_delight_rechopped.block.CarcassRegistry;
 import net.takerudavis.butchers_delight_rechopped.block.entity.CarcassBlockEntity;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-public class CarcassBlockEntityRenderer implements BlockEntityRenderer<CarcassBlockEntity> {
+import com.mojang.blaze3d.vertex.PoseStack;
+
+public class CarcassBlockEntityRenderer extends GeoBlockRenderer<CarcassBlockEntity> {
 
     public CarcassBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        super(new PlacedCarcassGeoModel());
+        CarcassRegistry.getAll().forEach(block -> block.attachBlockRenderLayers(this));
     }
 
     @Override
-    public void render(CarcassBlockEntity carcassBlockEntity, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
-
+    public void render(CarcassBlockEntity animatable, float partialTick, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        if (!(animatable.getBlockState().getBlock() instanceof AbstractCarcassBlock carcassBlock)
+                || !CarcassGeoModel.hasGeoModel(carcassBlock.getGeoId())) {
+            return;
+        }
+        this.animatable = animatable;
+        defaultRender(poseStack, animatable, bufferSource, null, null, 0, partialTick, packedLight);
     }
 
+    @Override
+    protected Direction getFacing(CarcassBlockEntity block) {
+        return block.getBlockState().getValue(AbstractCarcassBlock.FACING);
+    }
 }

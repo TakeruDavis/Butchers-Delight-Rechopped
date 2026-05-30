@@ -55,6 +55,11 @@ public class HookBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        BlockState below = level.getBlockState(pos.below());
+        if (below.getBlock() instanceof AbstractHookableCarcassBlock
+                && below.getValue(AbstractHookableCarcassBlock.HOOKED)) {
+            return Shapes.block();
+        }
         return switch (state.getValue(FACING)) {
             case SOUTH -> SHAPE_SOUTH;
             case EAST -> SHAPE_EAST;
@@ -72,47 +77,38 @@ public class HookBlock extends Block {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack stack = player.getItemInHand(hand);
-        if (
-                stack.getItem() instanceof BlockItem blockItem &&
-                blockItem.getBlock() instanceof AbstractHookableCarcassBlock carcassItem
-        ) {
+        if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractHookableCarcassBlock carcassBlock) {
             BlockPos belowPos = pos.below();
 
             if (level.getBlockState(belowPos).canBeReplaced()) {
-                BlockState carcassState = carcassItem.defaultBlockState();
-
-                if (stack.hasTag() && stack.getTag().contains("BlockStateTag")) {
-                    CompoundTag blockStateTag = stack.getTag().getCompound("BlockStateTag");
-                    if (blockStateTag.contains(AbstractCarcassBlock.STAGE.getName())) {
-                        String stageName = blockStateTag.getString(AbstractCarcassBlock.STAGE.getName());
-
-                        for (ProcessingStage stage : ProcessingStage.values()) {
-                            if (stage.getSerializedName().equals(stageName)) {
-                                carcassState = carcassState.setValue(AbstractCarcassBlock.STAGE, stage);
-                                break;
-                            }
-                        }
-                    }
-                }
+                CompoundTag blockStateTag = stack.getTagElement("BlockStateTag");
+                BlockState carcassState = AbstractCarcassBlock.applyBlockStateTag(
+                        carcassBlock.defaultBlockState(), blockStateTag);
 
                 carcassState = carcassState.setValue(AbstractHookableCarcassBlock.HOOKED, true)
                         .setValue(AbstractHookableCarcassBlock.FACING, state.getValue(HookBlock.FACING));
 
                 level.setBlockAndUpdate(belowPos, carcassState);
 
-                if (level.getBlockEntity(belowPos) instanceof CarcassBlockEntity carcassBlockEntity) {
-                    if (stack.hasTag() && stack.getTag().contains("BlockEntityTag")) {
-                        carcassBlockEntity.load(stack.getTag().getCompound("BlockEntityTag"));
-                        carcassBlockEntity.setChanged();
-                        level.sendBlockUpdated(belowPos, carcassState, carcassState, Block.UPDATE_CLIENTS);
-                    }
+                CompoundTag blockEntityTag = stack.getTagElement("BlockEntityTag");
+                if (level.getBlockEntity(belowPos) instanceof CarcassBlockEntity carcassBlockEntity && blockEntityTag != null) {
+                    carcassBlockEntity.load(blockEntityTag.copy());
+                    carcassBlockEntity.setChanged();
+                    level.sendBlockUpdated(belowPos, carcassState, carcassState, Block.UPDATE_CLIENTS);
                 }
 
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
+                if (!player.isCreative()) stack.shrink(1);
                 return InteractionResult.SUCCESS;
             }
+        }
+
+        // Forward to hooked carcass below
+        BlockPos belowPos = pos.below();
+        BlockState belowState = level.getBlockState(belowPos);
+        if (belowState.getBlock() instanceof AbstractHookableCarcassBlock
+                && belowState.getValue(AbstractHookableCarcassBlock.HOOKED)) {
+            return belowState.use(level, player, hand,
+                    new BlockHitResult(hitResult.getLocation(), hitResult.getDirection(), belowPos, false));
         }
 
         return InteractionResult.PASS;

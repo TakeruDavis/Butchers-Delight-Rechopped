@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        { "condition": "minecraft:block_state_property", "block": "butchers_delight_rechopped:sheep_carcass", "properties": { "meat": "fresh" } }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:mutton" }
+      ]
+    },
+    {
+      "rolls": 1,
+      "conditions": [
+        { "condition": "minecraft:block_state_property", "block": "butchers_delight_rechopped:sheep_carcass", "properties": { "meat": "cooked" } }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:cooked_mutton" }
+      ]
+    },
+    {
+      "rolls": 1,
+      "conditions": [
+        { "condition": "minecraft:random_chance", "chance": 0.33 }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:bone" }
+      ]
+    }
+  ]
+}

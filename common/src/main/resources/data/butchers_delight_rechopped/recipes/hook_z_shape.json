@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "II ",
+    " I ",
+    " II"
+  ],
+  "key": {
+    "I": {"item": "minecraft:iron_ingot"}
+  },
+  "result": {"item": "butchers_delight_rechopped:hook", "count": 4}
+}

@@ -1,13 +1,11 @@
 package net.takerudavis.butchers_delight_rechopped;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -23,22 +21,23 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.takerudavis.butchers_delight_rechopped.block.CarcassRegistry;
+import net.takerudavis.butchers_delight_rechopped.block.entity.SheepHeadBlockEntity;
 import net.takerudavis.butchers_delight_rechopped.client.CarcassBlockEntityRenderer;
-import org.slf4j.Logger;
+import net.takerudavis.butchers_delight_rechopped.client.RoasterBlockEntityRenderer;
+import net.takerudavis.butchers_delight_rechopped.client.SheepHeadBlockEntityRenderer;
+import net.takerudavis.butchers_delight_rechopped.common.ButchersConstants;
+import net.takerudavis.butchers_delight_rechopped.common.CommonSounds;
 
-@Mod(ButchersDelightRechopped.MODID)
+@Mod(ButchersConstants.MODID)
 public class ButchersDelightRechopped {
 
-    // Define mod id in a common place for everything to reference
-    public static final String MODID = "butchers_delight_rechopped";
-    // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "butchers_delight_rechopped" namespace
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
+            .create(Registries.CREATIVE_MODE_TAB, ButchersConstants.MODID);
 
     // Creates a creative tab with the id "butchers_delight_rechopped:main_tab" for mod's items, that is placed after the combat tab
-    public static final RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("main_tab", () -> CreativeModeTab.builder()
+    public static final RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS
+            .register("main_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.butchers_delight_rechopped"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> ModItems.CLEAVER.get().getDefaultInstance())
@@ -56,6 +55,8 @@ public class ButchersDelightRechopped {
         ModBlocks.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ModItems.register(modEventBus);
+        // Register the Deferred Register to the mod event bus so sound events get registered
+        ModSounds.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
 
@@ -72,14 +73,11 @@ public class ButchersDelightRechopped {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+        SheepHeadBlockEntity.TYPE = ModBlocks.SHEEP_HEAD_BLOCK_ENTITY.get();
 
-        if (Config.logDirtBlock) LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-
-        Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
+        CommonSounds.CLEAVER_CHOP   = ModSounds.CLEAVER_CHOP.get();
+        CommonSounds.ROASTER_SINGE  = ModSounds.ROASTER_SINGE.get();
+        CommonSounds.ROASTER_SIZZLE = ModSounds.ROASTER_SIZZLE.get();
     }
 
     // Add the mod's items to the mod's main tab
@@ -87,7 +85,9 @@ public class ButchersDelightRechopped {
         if (event.getTabKey() == MAIN_TAB.getKey()) {
             event.accept(ModItems.CLEAVER);
             event.accept(ModBlocks.HOOK_BLOCK);
-            ModBlocks.CARCASS_BLOCKS.forEach(event::accept);
+            event.accept(ModBlocks.ROASTER);
+            CarcassRegistry.getAll().forEach(event::accept);
+            event.accept(ModItems.SHEEP_HEAD);
         }
     }
 
@@ -95,17 +95,13 @@ public class ButchersDelightRechopped {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = ButchersConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
 
         @SubscribeEvent
@@ -113,6 +109,14 @@ public class ButchersDelightRechopped {
             event.registerBlockEntityRenderer(
                     ModBlocks.CARCASS_BLOCK_ENTITY.get(),
                     CarcassBlockEntityRenderer::new
+            );
+            event.registerBlockEntityRenderer(
+                    ModBlocks.ROASTER_BLOCK_ENTITY.get(),
+                    RoasterBlockEntityRenderer::new
+            );
+            event.registerBlockEntityRenderer(
+                    ModBlocks.SHEEP_HEAD_BLOCK_ENTITY.get(),
+                    SheepHeadBlockEntityRenderer::new
             );
         }
     }

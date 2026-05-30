@@ -14,6 +14,11 @@ architectury {
 }
 
 configurations {
+    mclibSource {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+
     common {
         canBeResolved = true
         canBeConsumed = false
@@ -30,10 +35,37 @@ configurations {
 
 dependencies {
     forge "net.minecraftforge:forge:$rootProject.forge_version"
-
+    modImplementation "software.bernie.geckolib:geckolib-forge-1.20.1:$rootProject.geckolib_version"
+    modImplementation files('../libs/mclib-forge-20.jar')
+    mclibSource "com.eliotlash.mclib:mclib:20"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+}
+
+// Regenerates libs/mclib-forge-20.jar from cloudsmith. Run manually with:
+//   gradle :forge:patchMclib
+tasks.register('patchMclib') {
+    inputs.files(configurations.mclibSource)
+    inputs.dir('mclib-meta')
+    def outputJar = rootProject.file('libs/mclib-forge-20.jar')
+    outputs.file(outputJar)
+
+    doLast {
+        def tmpDir = file("${buildDir}/mclib/unpack")
+        tmpDir.deleteDir()
+        ant.unzip(src: configurations.mclibSource.singleFile, dest: tmpDir)
+        file('mclib-meta').eachFileRecurse { f ->
+            if (f.isFile()) {
+                def rel = f.path.substring(file('mclib-meta').path.length() + 1)
+                def dest = new File(tmpDir, rel)
+                dest.parentFile.mkdirs()
+                dest.bytes = f.bytes
+            }
+        }
+        ant.jar(destfile: outputJar, basedir: tmpDir)
+        logger.lifecycle("Patched mclib written to ${outputJar}")
+    }
 }
 
 processResources {

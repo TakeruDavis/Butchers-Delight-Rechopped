@@ -1,5 +1,10 @@
 {
   "credit": "Made with Blockbench",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "0": "butchers_delight_rechopped:block/carcass/chicken/base",
+    "particle": "butchers_delight_rechopped:block/carcass/chicken/base"
+  },
   "texture_size": [
     64,
     32

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        { "condition": "minecraft:block_state_property", "block": "butchers_delight_rechopped:chicken_carcass", "properties": { "meat": "fresh" } }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:chicken" }
+      ]
+    },
+    {
+      "rolls": 1,
+      "conditions": [
+        { "condition": "minecraft:block_state_property", "block": "butchers_delight_rechopped:chicken_carcass", "properties": { "meat": "cooked" } }
+      ],
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:cooked_chicken" }
+      ]
+    }
+  ]
+}

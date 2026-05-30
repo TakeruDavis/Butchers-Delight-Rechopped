@@ -1,0 +1,14 @@
+{
+  "item.cleaver.chop": {
+    "subtitle": "subtitles.butchers_delight_rechopped.item.cleaver.chop",
+    "sounds": [{ "name": "minecraft:item.axe.strip", "type": "event" }]
+  },
+  "block.roaster.singe": {
+    "subtitle": "subtitles.butchers_delight_rechopped.block.roaster.singe",
+    "sounds": [{ "name": "minecraft:entity.blaze.shoot", "type": "event" }]
+  },
+  "block.roaster.sizzle": {
+    "subtitle": "subtitles.butchers_delight_rechopped.block.roaster.sizzle",
+    "sounds": [{ "name": "minecraft:block.fire.extinguish", "type": "event" }]
+  }
+}

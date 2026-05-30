@@ -9,8 +9,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import net.takerudavis.butchers_delight_rechopped.block.AbstractCarcassBlock;
+import net.takerudavis.butchers_delight_rechopped.block.AbstractHookableCarcassBlock;
+import net.takerudavis.butchers_delight_rechopped.client.CarcassGeoModel;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class CarcassBlockEntity extends BlockEntity {
+public class CarcassBlockEntity extends BlockEntity implements GeoBlockEntity {
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static BlockEntityType<CarcassBlockEntity> TYPE;
 
@@ -20,12 +32,34 @@ public class CarcassBlockEntity extends BlockEntity {
         super(TYPE, pos, blockState);
     }
 
-    public CompoundTag getCarcassData() {
-        return carcassData;
+    private static final RawAnimation ANIM_PLACED = RawAnimation.begin().thenLoop("placed");
+    private static final RawAnimation ANIM_HOOKED = RawAnimation.begin().thenLoop("hooked");
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "pose", 0, state -> {
+            if (!(getBlockState().getBlock() instanceof AbstractCarcassBlock carcassBlock)
+                    || !CarcassGeoModel.hasGeoModel(carcassBlock.getGeoId())) {
+                return PlayState.STOP;
+            }
+            BlockState blockState = getBlockState();
+            if (blockState.hasProperty(AbstractHookableCarcassBlock.HOOKED)
+                    && blockState.getValue(AbstractHookableCarcassBlock.HOOKED)) {
+                state.getController().setAnimation(ANIM_HOOKED);
+            } else {
+                state.getController().setAnimation(ANIM_PLACED);
+            }
+            return PlayState.CONTINUE;
+        }));
     }
 
-    public void setCarcassData(CompoundTag carcassData) {
-        this.carcassData = carcassData;
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    public CompoundTag getCarcassData() {
+        return carcassData;
     }
 
     @Override
@@ -50,7 +84,7 @@ public class CarcassBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("CarcassData")) {
-            this.carcassData = tag.getCompound("CarcassData");
+            this.carcassData = tag.getCompound("CarcassData").copy();
         }
     }
 }

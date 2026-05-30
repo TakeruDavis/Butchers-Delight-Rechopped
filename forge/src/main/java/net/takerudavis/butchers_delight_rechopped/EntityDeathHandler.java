@@ -6,14 +6,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
 import net.takerudavis.butchers_delight_rechopped.block.AbstractCarcassBlock;
+import net.takerudavis.butchers_delight_rechopped.block.CarcassRegistry;
+import net.takerudavis.butchers_delight_rechopped.common.ButchersConstants;
 import net.takerudavis.butchers_delight_rechopped.item.CleaverItem;
 
-@Mod.EventBusSubscriber(modid = ButchersDelightRechopped.MODID)
+@Mod.EventBusSubscriber(modid = ButchersConstants.MODID)
 public class EntityDeathHandler {
 
     @SubscribeEvent
@@ -30,13 +32,11 @@ public class EntityDeathHandler {
             return; // Only proceed if killed with a cleaver
         }
 
-        RegistryObject<? extends AbstractCarcassBlock> carcassBlockDeferred = ModBlocks.getCarcassBlockForEntity(entity.getType());
+        AbstractCarcassBlock abstractCarcassBlock = CarcassRegistry.getForEntity(entity.getType());
 
-        if (carcassBlockDeferred == null) {
+        if (abstractCarcassBlock == null) {
             return;
         }
-
-        AbstractCarcassBlock abstractCarcassBlock = carcassBlockDeferred.get();
 
         ItemStack carcassStack = new ItemStack(abstractCarcassBlock.asItem());
 

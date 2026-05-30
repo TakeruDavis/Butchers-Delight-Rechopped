@@ -1,0 +1,10 @@
+{
+  "parent": "butchers_delight_rechopped:custom/roaster",
+  "textures": {
+    "all": "butchers_delight_rechopped:block/roaster",
+    "particle": "minecraft:block/stripped_oak_log",
+    "0": "minecraft:block/oak_log",
+    "1": "minecraft:block/stripped_oak_log"
+  },
+  "render_type": "cutout_mipped"
+}

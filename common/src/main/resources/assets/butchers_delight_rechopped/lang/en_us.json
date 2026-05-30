@@ -1,7 +1,29 @@
 {
   "block.butchers_delight_rechopped.hook": "Hook",
+  "block.butchers_delight_rechopped.roaster": "Roaster",
   "block.butchers_delight_rechopped.chicken_carcass": "Chicken Carcass",
   "block.butchers_delight_rechopped.sheep_carcass": "Sheep Carcass",
   "itemGroup.butchers_delight_rechopped": "Butcher's Delight: Rechopped",
-  "item.butchers_delight_rechopped.cleaver": "Cleaver"
+  "item.butchers_delight_rechopped.cleaver": "Cleaver",
+  "item.butchers_delight_rechopped.sheep_carcass.wool_color": "Wool: %s",
+  "block.butchers_delight_rechopped.sheep_head": "Sheep Head",
+
+  "subtitles.butchers_delight_rechopped.item.cleaver.chop": "Cleaver chops",
+  "subtitles.butchers_delight_rechopped.block.roaster.singe": "Roaster singes",
+  "subtitles.butchers_delight_rechopped.block.roaster.sizzle": "Roaster sizzles",
+
+  "tooltip.butchers_delight_rechopped.stage.intact": "Intact",
+  "tooltip.butchers_delight_rechopped.stage.sheared": "Sheared",
+  "tooltip.butchers_delight_rechopped.stage.skinned": "Skinned",
+  "tooltip.butchers_delight_rechopped.stage.delimbed": "Delimbed",
+  "tooltip.butchers_delight_rechopped.stage.butchered": "Butchered",
+  "tooltip.butchers_delight_rechopped.meat.fresh": "Fresh",
+  "tooltip.butchers_delight_rechopped.meat.cooked": "Cooked",
+  "tooltip.butchers_delight_rechopped.beheaded": "Beheaded",
+  "tooltip.butchers_delight_rechopped.removed_limbs": "Removed limbs:",
+
+  "tooltip.butchers_delight_rechopped.sheep_carcass.limb.leg0": "Front Left Leg",
+  "tooltip.butchers_delight_rechopped.sheep_carcass.limb.leg1": "Front Right Leg",
+  "tooltip.butchers_delight_rechopped.sheep_carcass.limb.leg2": "Back Left Leg",
+  "tooltip.butchers_delight_rechopped.sheep_carcass.limb.leg3": "Back Right Leg"
 }
